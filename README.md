@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/images/modo-escuro-logo.png" alt="KEEPER — Sistema Inteligente de Controle de Acesso" width="240">
+  <img src="docs/modo_escuro_logo.png" alt="KEEPER — Sistema Inteligente de Controle de Acesso" width="240">
 
   # KEEPER
   ### Sistema Inteligente de Controle de Acesso
