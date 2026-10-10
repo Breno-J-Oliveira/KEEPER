@@ -1,9 +1,9 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/modo_escuro_logo.png">
-    <source media="(prefers-color-scheme: light)" srcset="docs/modo_claro_logo.png">
-    <img src="docs/modo_escuro_logo.png" alt="KEEPER — Sistema Inteligente de Controle de Acesso" width="260">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/logo-escuro.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/brand/logo-claro.png">
+    <img src="assets/brand/logo-escuro.png" alt="KEEPER — Sistema Inteligente de Controle de Acesso" width="260">
   </picture>
 
   <h1>KEEPER</h1>
@@ -30,6 +30,7 @@
     <a href="#como-funciona-o-fluxo-de-acesso">Fluxo</a> &nbsp;·&nbsp;
     <a href="#arquitetura">Arquitetura</a> &nbsp;·&nbsp;
     <a href="#segurança">Segurança</a> &nbsp;·&nbsp;
+    <a href="#documentação">Documentação</a> &nbsp;·&nbsp;
     <a href="#instalação-e-execução">Instalação</a> &nbsp;·&nbsp;
     <a href="#testes-e-validação">Testes</a> &nbsp;·&nbsp;
     <a href="#equipe">Equipe</a>
@@ -156,6 +157,21 @@ A interface nasceu de um protótipo navegável no **Figma**, que definiu a organ
   <img src="docs/assets/img/figura-15-painel-administrativo.png" alt="Painel administrativo: dashboard, usuários, veículos, histórico e configurações" width="880">
 </p>
 <p align="center"><sub><b>Figura 15</b> — Dashboard, usuários, veículos, histórico e configurações.</sub></p>
+
+### Acesso pelo navegador
+
+O funcionário (porta **8550**) e o administrador (porta **8551**) também funcionam como sites, abertos em qualquer navegador da rede.
+
+<table align="center">
+  <tr>
+    <td align="center"><img src="docs/assets/img/web-funcionario-login.png" alt="Login do funcionário aberto no navegador" width="430"></td>
+    <td align="center"><img src="docs/assets/img/web-administrador-login.png" alt="Login do administrador aberto no navegador" width="430"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Funcionário no navegador (porta 8550)</sub></td>
+    <td align="center"><sub>Administrador no navegador (porta 8551)</sub></td>
+  </tr>
+</table>
 
 ### Acesso remoto
 
@@ -330,7 +346,7 @@ erDiagram
 | **Falhas** | Qualquer falha de câmera, OCR, QR ou rosto mantém a máquina no passo atual: **falha nunca é autorização**. |
 
 > [!WARNING]
-> **Dados pessoais sensíveis.** A foto facial é dado pessoal sensível (LGPD, Lei nº 13.709/2018). O cadastro deve ocorrer **somente com consentimento**, e o acesso à pasta `data/faces/` precisa ser controlado. A comparação é feita no próprio sistema e **não** é a biometria nativa do sistema operacional.
+> **Dados pessoais sensíveis.** A foto facial é dado pessoal sensível (LGPD, Lei nº 13.709/2018). O cadastro deve ocorrer **somente com consentimento**, e o acesso à pasta `data/faces/` precisa ser controlado. O `.gitignore` do projeto impede que o banco (`keeper.db`), as fotos de rosto e as exportações sejam enviados ao GitHub. A comparação é feita no próprio sistema e **não** é a biometria nativa do sistema operacional.
 
 ---
 
@@ -339,7 +355,7 @@ erDiagram
 O design system fica centralizado em `ui.py`: trocar de tema não exige reimplementar telas, e a escolha é gravada em `storage/theme.txt`.
 
 <p align="center">
-  <img src="docs/paleta.png" alt="Paleta de cores do KEEPER" width="680">
+  <img src="assets/brand/paleta.png" alt="Paleta de cores do KEEPER" width="680">
 </p>
 
 <p align="center">
@@ -387,34 +403,48 @@ A foto da placa é convertida para tons de cinza e ampliada três vezes; o siste
 
 ```text
 KEEPER/
-├── app.py                 # Central: abre as três visões
-├── employee.py            # Interface do funcionário
-├── machine.py             # Máquina de portaria e câmera
-├── admin.py               # Painel administrativo
-├── mobile.py              # Serviço web do funcionário (porta 8550)
-├── web_admin.py           # Serviço web do administrador (porta 8551)
-├── db.py                  # Banco de dados, regras e CRUD
-├── security.py            # Autenticação, QR, OCR e reconhecimento facial
-├── extras.py              # Bloqueio de placas, visitantes, reset de senha e PDF
-├── ui.py                  # Design system: tema, componentes, fontes e ícones
-├── fa_icons.py            # Mapa de ícones Font Awesome
-├── smoke_test.py          # Testes automatizados de lógica
-├── download_models.py     # Download dos modelos YuNet/SFace
-├── requirements.txt       # Dependências Python
-├── keeper.db              # Banco local (gerado na execução)
-├── models/                # Modelos de visão computacional
-├── assets/fonts/          # Poppins e Font Awesome
-├── data/faces/            # Referências faciais locais (dado sensível)
-├── exports/               # CSV e PDF exportados
-├── storage/               # Preferências locais (tema)
-├── docs/                  # Logos, paleta e imagens deste README
-├── INSTALL_WINDOWS.cmd    # Prepara o ambiente
-├── RUN_KEEPER.cmd         # Abre a central
-├── RUN_DEMO.cmd           # Abre as três aplicações
-├── RUN_SERVIDOR.cmd       # Sobe portaria + serviços web
-├── RUN_LINK_PUBLICO.cmd   # Cria o link público (Quick Tunnel)
-├── RESET_DEMO.cmd         # Recria o banco de demonstração
-└── CHECK_KEEPER.cmd       # Executa os testes de lógica
+├── app.py                  # Central: abre as três visões
+├── employee.py             # Interface do funcionário
+├── machine.py              # Máquina de portaria e câmera
+├── admin.py                # Painel administrativo
+├── mobile.py               # Serviço web do funcionário (porta 8550)
+├── web_admin.py            # Serviço web do administrador (porta 8551)
+├── db.py                   # Banco de dados, regras e CRUD
+├── security.py             # Autenticação, QR, OCR e reconhecimento facial
+├── extras.py               # Bloqueio de placas, visitantes, reset de senha e PDF
+├── ui.py                   # Design system: tema, componentes, fontes e ícones
+├── fa_icons.py             # Mapa de ícones Font Awesome
+├── smoke_test.py           # Testes automatizados de lógica
+├── requirements.txt        # Dependências Python
+├── .gitignore              # Não versiona banco, rostos, exportações e modelos
+│
+├── scripts/                # Atalhos para Windows (dois cliques)
+│   ├── INSTALL_WINDOWS.cmd     # Prepara o ambiente (uma vez)
+│   ├── RUN_KEEPER.cmd          # Abre a central
+│   ├── RUN_DEMO.cmd            # Abre as três aplicações
+│   ├── RUN_SERVIDOR.cmd        # Sobe portaria + serviços web
+│   ├── RUN_MOBILE.cmd          # Serve o app do funcionário para o celular
+│   ├── RUN_LINK_PUBLICO.cmd    # Cria o link público (Quick Tunnel)
+│   ├── CHECK_KEEPER.cmd        # Executa os testes de lógica
+│   ├── RESET_DEMO.cmd          # Recria o banco de demonstração
+│   └── download_models.py      # Baixa os modelos YuNet/SFace
+│
+├── assets/                 # Recursos usados pelo aplicativo
+│   ├── brand/                  # logo-claro, logo-escuro, logo-marca e paleta
+│   └── fonts/                  # Poppins e Font Awesome
+│
+├── docs/                   # Documentação do projeto
+│   ├── KEEPER_Documentacao.pdf / .docx
+│   ├── situacao-de-aprendizagem.md   # Enunciado da atividade (SENAI)
+│   ├── proposta-do-projeto.md        # Proposta inicial
+│   └── assets/img/                   # Capturas de tela deste README
+│
+└── (criadas na execução, fora do Git)
+    ├── keeper.db           # Banco SQLite
+    ├── data/faces/         # Referências faciais (dado sensível)
+    ├── exports/            # CSV e PDF exportados
+    ├── storage/            # Preferências locais (tema)
+    └── models/             # Modelos de visão computacional
 ```
 
 ---
@@ -427,7 +457,7 @@ KEEPER/
 - Dependências do `requirements.txt` (instaladas pelo script).
 - **Tesseract OCR** instalado, para a leitura automática de placas.
 - **Câmera**, para os recursos de placa, QR e rosto.
-- Modelos **YuNet/SFace** (baixados pelo instalador ou por `download_models.py`).
+- Modelos **YuNet/SFace** (baixados pelo instalador ou por `python scripts/download_models.py`).
 - `cloudflared`, **apenas** se for publicar os serviços por Quick Tunnel.
 
 ### 1. Obtenha o projeto
@@ -439,17 +469,18 @@ cd KEEPER
 
 ### 2. Prepare o ambiente (uma vez)
 
-Dê dois cliques em **`INSTALL_WINDOWS.cmd`**. Ele cria o ambiente virtual, instala as dependências, tenta instalar o Tesseract pelo Winget e baixa os modelos faciais.
+Dê dois cliques em **`scripts\INSTALL_WINDOWS.cmd`**. Ele cria o ambiente virtual (`.venv`) na raiz do projeto, instala as dependências do `requirements.txt`, tenta instalar o Tesseract pelo Winget e baixa os modelos faciais.
 
 ### 3. Execute
 
 | Quero… | Faça |
 |---|---|
-| Abrir a tela central | `RUN_KEEPER.cmd` |
-| Abrir as três aplicações para demonstrar | `RUN_DEMO.cmd` |
-| Subir portaria e serviços web | `RUN_SERVIDOR.cmd` |
-| Verificar se está tudo certo | `CHECK_KEEPER.cmd` |
-| Recriar o banco de demonstração | `RESET_DEMO.cmd` |
+| Abrir a tela central | `scripts\RUN_KEEPER.cmd` |
+| Abrir as três aplicações para demonstrar | `scripts\RUN_DEMO.cmd` |
+| Subir portaria e serviços web | `scripts\RUN_SERVIDOR.cmd` |
+| Usar o app do funcionário no celular | `scripts\RUN_MOBILE.cmd` |
+| Verificar se está tudo certo | `scripts\CHECK_KEEPER.cmd` |
+| Recriar o banco de demonstração | `scripts\RESET_DEMO.cmd` |
 
 Pelo terminal, com o ambiente virtual ativo:
 
@@ -491,7 +522,7 @@ cloudflared tunnel --url http://localhost:8550    # funcionário
 cloudflared tunnel --url http://localhost:8551    # administrador
 ```
 
-Ou dê dois cliques em `RUN_LINK_PUBLICO.cmd`.
+Ou dê dois cliques em `scripts\RUN_LINK_PUBLICO.cmd`.
 
 ```mermaid
 flowchart LR
@@ -529,7 +560,7 @@ Os testes são de três tipos: **automatizados de lógica** (`smoke_test.py`, qu
 
 </div>
 
-Para repetir os testes de lógica, execute `CHECK_KEEPER.cmd` (ou `python smoke_test.py`); o resultado esperado termina em **“Tudo certo”**.
+Para repetir os testes de lógica, execute `scripts\CHECK_KEEPER.cmd` (ou `python smoke_test.py`, na raiz do projeto); o resultado esperado termina em **“Tudo certo”**.
 
 ---
 
@@ -550,6 +581,16 @@ Para repetir os testes de lógica, execute `CHECK_KEEPER.cmd` (ou `python smoke_
 - [ ] Hospedagem persistente e armazenamento de dados adequado a um ambiente real.
 - [ ] Captura facial pelo navegador, para cadastro direto pelo celular.
 - [ ] Integração com hardware de portão/cancela, com mecanismos de segurança física.
+
+---
+
+## Documentação
+
+| Documento | Conteúdo |
+|---|---|
+| [`KEEPER_Documentacao.pdf`](docs/KEEPER_Documentacao.pdf) | Documentação técnica completa, nas normas da ABNT (também em [`.docx`](docs/KEEPER_Documentacao.docx)) |
+| [`situacao-de-aprendizagem.md`](docs/situacao-de-aprendizagem.md) | Enunciado da Situação de Aprendizagem Integradora (SENAI) |
+| [`proposta-do-projeto.md`](docs/proposta-do-projeto.md) | Proposta inicial do ecossistema KEEPER |
 
 ---
 
@@ -577,7 +618,7 @@ Projeto acadêmico desenvolvido no curso **Técnico em Desenvolvimento de Sistem
 ---
 
 <div align="center">
-  <img src="docs/logo_marca.png" alt="Marca do KEEPER" width="70">
+  <img src="assets/brand/logo-marca.png" alt="Marca do KEEPER" width="70">
   <br>
   <sub><b>KEEPER</b> — Projeto acadêmico • Técnico em Desenvolvimento de Sistemas • SENAI “A. Jacob Lafer” • 2026</sub>
 </div>

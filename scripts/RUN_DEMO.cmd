@@ -1,6 +1,6 @@
 @echo off
 setlocal
-cd /d "%~dp0"
+cd /d "%~dp0.."
 call .venv\Scripts\activate.bat
 start "KEEPER - MAQUINA" cmd /k "python machine.py"
 start "KEEPER - ADM" cmd /k "python admin.py"

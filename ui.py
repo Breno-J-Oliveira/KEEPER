@@ -190,7 +190,7 @@ R_PILL = 20
 CARD_SHADOW = ft.BoxShadow(blur_radius=18, color=SHADOW, offset=ft.Offset(0, 7))
 
 BASE = Path(__file__).resolve().parent
-LOGO = str(BASE / "docs" / "modo_claro_logo.png")
+LOGO = str(BASE / "assets" / "brand" / "logo-claro.png")
 try:
     import base64 as _b64
     _LOGO_B64 = _b64.b64encode(open(LOGO, "rb").read()).decode()
@@ -353,7 +353,7 @@ def empty_state(icon: str, title: str, message: str = ""):
 
 try:
     import base64 as _b
-    _MARK_B64 = _b.b64encode(open(Path(__file__).resolve().parent / "docs" / "logo_marca.png", "rb").read()).decode()
+    _MARK_B64 = _b.b64encode(open(Path(__file__).resolve().parent / "assets" / "brand" / "logo-marca.png", "rb").read()).decode()
 except OSError:
     _MARK_B64 = None
 
@@ -447,18 +447,19 @@ def shell(page: ft.Page, body, width=520, bottom=None):
 
 
 def bottom_nav(items, selected, callback):
-    """Barra inferior flutuante: aba ativa em pílula verde-oliva com ícone + rótulo (como no protótipo)."""
+    """Barra inferior flutuante: ícone + nome em todas as abas; a ativa fica em pílula verde-oliva (como no protótipo)."""
     controls = []
     for key, icon, label in items:
         active = key == selected
+        cor = ON_PRIMARY if active else MUTED
         controls.append(ft.Container(
-            padding=ft.padding.symmetric(horizontal=14 if active else 10, vertical=9), border_radius=18, bgcolor=PRIMARY if active else None,
+            expand=True, padding=ft.padding.symmetric(vertical=8), border_radius=18, bgcolor=PRIMARY if active else None,
             animate=ft.Animation(220, ft.AnimationCurve.EASE_OUT), on_click=lambda e, k=key: callback(k), ink=True,
-            content=ft.Row([fa(icon, 16, ON_PRIMARY if active else MUTED)] + ([ft.Text(label, size=11, weight=ft.FontWeight.W_600, color=ON_PRIMARY)] if active else []),
-                           tight=True, spacing=7, alignment=ft.MainAxisAlignment.CENTER)))
-    return ft.Container(margin=ft.margin.only(left=14, right=14, bottom=12, top=4), padding=ft.padding.symmetric(horizontal=8, vertical=8), bgcolor=SURFACE,
+            content=ft.Column([fa(icon, 17, cor), ft.Text(label, size=9, weight=ft.FontWeight.W_600 if active else ft.FontWeight.W_500, color=cor, no_wrap=True)],
+                              spacing=3, horizontal_alignment=ft.CrossAxisAlignment.CENTER)))
+    return ft.Container(margin=ft.margin.only(left=14, right=14, bottom=12, top=4), padding=ft.padding.symmetric(horizontal=6, vertical=6), bgcolor=SURFACE,
                         border=ft.border.all(1, LINE), border_radius=26, shadow=ft.BoxShadow(blur_radius=28, spread_radius=-6, color=SHADOW, offset=ft.Offset(0, 10)),
-                        content=ft.Row(controls, alignment=ft.MainAxisAlignment.SPACE_AROUND))
+                        content=ft.Row(controls, spacing=2))
 
 
 async def close_after(page: ft.Page, control, seconds: float):
@@ -503,3 +504,52 @@ def car_image(modelo: str | None, cor: str | None, width: int = 150) -> ft.Image
         im = im.resize((W // S, H // S), Image.LANCZOS)
         buf = io.BytesIO(); im.save(buf, "PNG"); _car_cache[key] = base64.b64encode(buf.getvalue()).decode()
     return ft.Image(src_base64=_car_cache[key], width=width, fit=ft.ImageFit.CONTAIN)
+
+
+
+# ---------------- Componentes do protótipo: indicadores, passo a passo e moldura de câmera ----------------
+def kpi_card(label: str, value, icon: str, accent=None):
+    """Indicador do dashboard: número grande + legenda + ícone (grade 2×2 do protótipo). Ocupa metade da linha."""
+    return ft.Container(
+        expand=True, bgcolor=SURFACE, border=ft.border.all(1, LINE), border_radius=20, padding=16,
+        shadow=ft.BoxShadow(blur_radius=24, spread_radius=-4, color=SHADOW, offset=ft.Offset(0, 8)),
+        content=ft.Column([
+            ft.Container(width=40, height=40, bgcolor=accent or OLIVE_SOFT, border_radius=14, alignment=ft.alignment.center, content=fa(icon, 17, OLIVE_DARK)),
+            ft.Text(str(value), size=32, weight=ft.FontWeight.W_800, color=INK),
+            ft.Text(label, size=11, color=MUTED),
+        ], spacing=2))
+
+
+def stepper(items):
+    """Passo a passo horizontal (1 · 2 · 3) com linhas ligando as etapas.
+    items = [(rótulo, detalhe, estado)] com estado em 'pending' | 'active' | 'done' | 'error'."""
+    cols = []
+    for i, (label, detail, state) in enumerate(items):
+        done, active, err = state == "done", state == "active", state == "error"
+        bg = GREEN if done else (RED if err else (PRIMARY if active else SURFACE_2))
+        fg = WHITE if (done or err or active) else MUTED
+        mark = fa(ft.Icons.CHECK, 15, fg) if done else (fa(ft.Icons.CLOSE, 15, fg) if err else ft.Text(str(i + 1), size=14, weight=ft.FontWeight.W_700, color=fg))
+        circle = ft.Container(width=38, height=38, border_radius=19, bgcolor=bg, alignment=ft.alignment.center, content=mark,
+                              border=ft.border.all(2, PRIMARY if active else bg))
+        left = ft.Container(height=2, expand=True, bgcolor=(GREEN if done or (i > 0 and items[i - 1][2] == "done") else LINE) if i > 0 else None)
+        right = ft.Container(height=2, expand=True, bgcolor=(GREEN if done else LINE) if i < len(items) - 1 else None)
+        cols.append(ft.Column([
+            ft.Row([left, circle, right], spacing=0, vertical_alignment=ft.CrossAxisAlignment.CENTER),
+            ft.Text(label.upper(), size=10, weight=ft.FontWeight.W_700, color=INK, text_align=ft.TextAlign.CENTER),
+            ft.Text(detail, size=9, color=MUTED, text_align=ft.TextAlign.CENTER, max_lines=1, overflow=ft.TextOverflow.ELLIPSIS),
+        ], spacing=4, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER))
+    return card(ft.Row(cols, spacing=0, vertical_alignment=ft.CrossAxisAlignment.START), padding=ft.padding.symmetric(horizontal=8, vertical=16))
+
+
+def viewfinder(icon, size=132, color=None):
+    """Moldura de câmera com 4 cantos (como a tela 'Aguardando veículo' do protótipo) e ícone no centro."""
+    color = color or KHAKI; t, L, r = 3, 28, 12
+    def corner(**pos):
+        side = ft.BorderSide(t, color); b = {}
+        b["top" if "top" in pos else "bottom"] = side; b["left" if "left" in pos else "right"] = side
+        rad = {("top" if "top" in pos else "bottom") + "_" + ("left" if "left" in pos else "right"): r}
+        return ft.Container(width=L, height=L, border=ft.border.only(**b), border_radius=ft.border_radius.only(**rad), **pos)
+    return ft.Container(width=size, height=int(size * 0.82), content=ft.Stack([
+        corner(top=0, left=0), corner(top=0, right=0), corner(bottom=0, left=0), corner(bottom=0, right=0),
+        ft.Container(left=0, top=0, right=0, bottom=0, alignment=ft.alignment.center, content=fa(icon, 40, OLIVE_DARK)),
+    ]))

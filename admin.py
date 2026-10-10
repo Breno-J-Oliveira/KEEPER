@@ -77,6 +77,10 @@ def main(page: ft.Page):
             ft.Column([ft.Text(str(value), size=22, weight=ft.FontWeight.W_800, color=INK), ft.Text(label, size=10, color=MUTED)], spacing=1, expand=True),
         ]), padding=13)
 
+    def qa(text, cb, icon):
+        b = secondary(text, cb, icon); b.expand = True   # ações rápidas: sempre a mesma largura
+        return b
+
     def show_dashboard():
         state["page"] = "dashboard"; s = db.dashboard_resumo(); inside = db.presentes()
         first = []
@@ -92,15 +96,16 @@ def main(page: ft.Page):
         body = ft.Column([
             ft.Row([ft.Column([ft.Text("KEEPER", size=12, weight=ft.FontWeight.W_800, color=OLIVE_DARK), ft.Text("Visão geral", size=25, weight=ft.FontWeight.W_800, color=INK)], spacing=0, expand=True), icon_button(ft.Icons.LOGOUT, lambda e: logout(), "Sair", RED)]),
             ft.Text(f"Olá, {state['user']['nome_completo'].split()[0]}. Tudo sob controle.", size=11, color=MUTED),
-            ft.Row([stats_card("Usuários", s["usuarios"], ft.Icons.PEOPLE_OUTLINE), stats_card("Presentes", s["dentro"], ft.Icons.LOGIN), stats_card("Veículos", s["veiculos"], ft.Icons.DIRECTIONS_CAR)], spacing=7, wrap=True),
-            ft.Row([stats_card("Acessos hoje", s["acessos_hoje"], ft.Icons.TODAY), stats_card("Solicitações", s["pendentes"], ft.Icons.VERIFIED_USER_OUTLINED), stats_card("Avisos", s["notificacoes"], ft.Icons.NOTIFICATIONS_OUTLINED)], spacing=7, wrap=True),
-            ft.Row([ft.Text("Quem está dentro", size=15, weight=ft.FontWeight.W_800, color=INK), ft.Container(expand=True), ft.TextButton("Atualizar", on_click=lambda e: show_dashboard())]),
+            ft.Row([kpi_card("Usuários", s["usuarios"], ft.Icons.PEOPLE_OUTLINE), kpi_card("Dentro agora", s["dentro"], ft.Icons.LOGIN)], spacing=10),
+            ft.Row([kpi_card("Veículos", s["veiculos"], ft.Icons.DIRECTIONS_CAR), kpi_card("Acessos hoje", s["acessos_hoje"], ft.Icons.TODAY)], spacing=10),
+            ft.Row([kpi_card("Pendências", s["pendentes"], ft.Icons.VERIFIED_USER_OUTLINED, BROWN_SOFT), kpi_card("Avisos", s["notificacoes"], ft.Icons.NOTIFICATIONS_NONE, BROWN_SOFT)], spacing=10),
+            ft.Row([ft.Text("Presentes agora", size=15, weight=ft.FontWeight.W_800, color=INK), ft.Container(expand=True), ft.TextButton("Atualizar", on_click=lambda e: show_dashboard())]),
             *first,
             ft.Text("Ações rápidas", size=14, weight=ft.FontWeight.W_800, color=INK),
-            ft.Row([secondary("Novo funcionário", lambda e: new_user(), ft.Icons.PERSON_ADD_ALT_1, 200), secondary("Novo veículo", lambda e: new_vehicle(), ft.Icons.DIRECTIONS_CAR, 200)], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
-            ft.Row([secondary("Acesso manual", lambda e: manual_access(), ft.Icons.SWAP_VERT, 200), secondary("Abrir máquina", lambda e: open_machine(), ft.Icons.DNS, 200)], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
-            ft.Row([secondary("Relatórios", lambda e: show_reports(), ft.Icons.INSERT_CHART_OUTLINED, 200), secondary("Auditoria", lambda e: show_audit(), ft.Icons.HISTORY, 200)], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
-            ft.Row([secondary("Configurações", lambda e: show_settings(), ft.Icons.SETTINGS_OUTLINED, 410)], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
+            ft.Row([qa("Novo funcionário", lambda e: new_user(), ft.Icons.PERSON_ADD_ALT_1), qa("Novo veículo", lambda e: new_vehicle(), ft.Icons.DIRECTIONS_CAR)], spacing=8),
+            ft.Row([qa("Acesso manual", lambda e: manual_access(), ft.Icons.SWAP_VERT), qa("Abrir máquina", lambda e: open_machine(), ft.Icons.DNS)], spacing=8),
+            ft.Row([qa("Relatórios", lambda e: show_reports(), ft.Icons.INSERT_CHART_OUTLINED), qa("Auditoria", lambda e: show_audit(), ft.Icons.HISTORY)], spacing=8),
+            ft.Row([qa("Configurações", lambda e: show_settings(), ft.Icons.SETTINGS_OUTLINED)], spacing=8),
         ], spacing=8)
         shell(page, body, 820, bottom("dashboard"))
 

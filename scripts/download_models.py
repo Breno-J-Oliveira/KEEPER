@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # raiz do projeto
+
 from security import ensure_face_models
 
 print("Baixando modelos de reconhecimento facial do OpenCV Zoo...")

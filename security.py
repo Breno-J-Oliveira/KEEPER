@@ -109,7 +109,7 @@ def ensure_face_models(download: bool = True) -> tuple[Path, Path]:
                     p.unlink(missing_ok=True)
                 raise RuntimeError(f"Não consegui baixar o modelo {p.name}: {exc}") from exc
     if not detector.exists() or not recognizer.exists():
-        raise FileNotFoundError("Modelos de face não encontrados. Rode python download_models.py")
+        raise FileNotFoundError("Modelos de face não encontrados. Rode python scripts/download_models.py")
     return detector, recognizer
 
 

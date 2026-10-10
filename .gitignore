@@ -1,9 +1,26 @@
+# Ambiente e cache
+.venv/
 __pycache__/
 *.pyc
-*.pyo
-.venv/
-venv/
 .env
-*.log
+
+# Dados gerados na execução (contêm dados pessoais: NÃO versionar)
+keeper.db
+keeper.db-*
+data/faces/*
+exports/*
+storage/*
+models/*.onnx
+
+# Sistema operacional / editores
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Mantém as pastas no repositório
+!data/faces/.gitkeep
+!exports/.gitkeep
+!storage/.gitkeep
+!models/.gitkeep

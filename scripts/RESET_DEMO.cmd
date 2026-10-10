@@ -1,6 +1,6 @@
 @echo off
 setlocal
-cd /d "%~dp0"
+cd /d "%~dp0.."
 echo ATENCAO: isto apaga o banco keeper.db e cria um banco novo de demonstracao.
 pause
 if exist keeper.db del /q keeper.db

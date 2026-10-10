@@ -429,7 +429,7 @@ def main(page: ft.Page):
         elif step == 0:
             center = ft.Column([
                 card(ft.Column([
-                    ft.Container(width=90, height=90, bgcolor=OLIVE_SOFT, border_radius=45, alignment=ft.alignment.center, content=ft.Icon(ft.Icons.DIRECTIONS_CAR, size=50, color=OLIVE_DARK)),
+                    viewfinder(ft.Icons.DIRECTIONS_CAR),
                     ft.Text('Aproxime o veículo', size=24, weight=ft.FontWeight.W_800, color=INK, text_align=ft.TextAlign.CENTER),
                     ft.Text('A máquina valida placa, QR Code, rosto e só então pede a confirmação no celular.', size=11, color=MUTED, text_align=ft.TextAlign.CENTER),
                     primary('Ler placa pela câmera', lambda e: page.run_task(scan_plate_camera, e), ft.Icons.CAMERA_ALT, 360),
@@ -452,8 +452,13 @@ def main(page: ft.Page):
             center = card(ft.Column([ft.Container(width=100, height=100, bgcolor=OLIVE_SOFT, border_radius=50, alignment=ft.alignment.center, content=ft.Icon(ft.Icons.GARAGE, size=58, color=OLIVE_DARK)), ft.Text('PORTÃO ABERTO', size=26, weight=ft.FontWeight.W_800, color=INK), ft.Text(who, size=11, color=MUTED, text_align=ft.TextAlign.CENTER), pill('REGISTRADO NO BANCO', ft.Icons.STORAGE, OLIVE_SOFT, INK), primary('Novo atendimento', reset, ft.Icons.RESTART_ALT, 360)], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10), padding=30)
         else:
             center = card(ft.Column([ft.Container(width=94, height=94, bgcolor=BROWN_SOFT, border_radius=47, alignment=ft.alignment.center, content=ft.Icon(ft.Icons.BLOCK, size=54, color=BROWN)), ft.Text('ACESSO BLOQUEADO', size=24, weight=ft.FontWeight.W_800, color=INK, text_align=ft.TextAlign.CENTER), ft.Text(state['result'] or 'Operação não concluída.', size=11, color=MUTED, text_align=ft.TextAlign.CENTER), secondary('Tentar novamente', reset, ft.Icons.RESTART_ALT, 360)], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10), padding=30)
-        info = ft.Column([step_card(1, 'Placa', state['placa'] or 'Aguardando', False, step >= 1), step_card(2, 'QR Code', 'Validado' if step >= 2 else 'Aguardando', False, step >= 2), step_card(3, 'Face', f"{state['score']:.3f}" if step >= 3 else 'Aguardando', False, step >= 3)], spacing=7)
+        def _est(n): return "done" if step >= n else ("active" if step == n - 1 else "pending")
+        if step == 6: _est = lambda n: "done" if step >= 6 and n == 0 else ("error" if n == 1 else "pending")
+        info = stepper([("Placa", state['placa'] or 'Aguardando', _est(1)), ("QR Code", 'Validado' if step >= 2 else 'Aguardando', _est(2)),
+                        ("Face", f"{state['score']:.2f}" if step >= 3 else 'Aguardando', _est(3))])
+        if isinstance(center, ft.Column): center.horizontal_alignment = ft.CrossAxisAlignment.STRETCH   # cartões em largura total
         body = ft.Column([header, mode, center, ft.Text('Validação', size=14, weight=ft.FontWeight.W_800, color=INK), info, ft.Divider(color=LINE), ft.Text('Últimos acessos', size=14, weight=ft.FontWeight.W_800, color=INK), *recent_events(), ft.Row([pill(f'ETAPA {step}/5', None, BEIGE, INK), ft.Container(expand=True), ft.Text(status_title, size=10, weight=ft.FontWeight.W_700, color=status_color)])], spacing=8)
+        body.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
         shell(page, body, 820)
 
     def recent_events():

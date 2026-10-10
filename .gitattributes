@@ -1,0 +1,3 @@
+# Scripts do Windows precisam de CRLF mesmo quando commitados em outros sistemas
+*.cmd text eol=crlf
+*.bat text eol=crlf

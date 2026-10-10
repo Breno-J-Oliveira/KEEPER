@@ -1,6 +1,6 @@
 @echo off
 setlocal
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 echo ============================================
 echo      KEEPER - INSTALADOR COMPLETO WINDOWS
@@ -44,8 +44,8 @@ if %errorlevel%==0 (
 )
 
 echo [6/7] Baixando modelos YuNet + SFace...
-python download_models.py
-if errorlevel 1 echo AVISO: modelos nao foram baixados. Rode depois: python download_models.py
+python scripts\download_models.py
+if errorlevel 1 echo AVISO: modelos nao foram baixados. Rode depois: python scripts\download_models.py
 
 echo [7/7] Validando instalacao...
 python -c "import flet,bcrypt,qrcode,cv2,numpy,PIL,pytesseract; print('PYTHON OK'); print('OpenCV:',cv2.__version__); print('FaceDetectorYN:',hasattr(cv2,'FaceDetectorYN')); print('FaceRecognizerSF:',hasattr(cv2,'FaceRecognizerSF')); print('QRCodeDetector:',hasattr(cv2,'QRCodeDetector'))"
@@ -60,6 +60,6 @@ echo.
 echo ============================================
 echo INSTALACAO CONCLUIDA.
 echo ============================================
-echo Rode: RUN_DEMO.cmd
+echo Rode: scripts\RUN_DEMO.cmd
 pause
 endlocal

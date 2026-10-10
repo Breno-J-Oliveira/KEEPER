@@ -86,4 +86,4 @@ print("[14] Modelos presentes:", [str(p) for p in [Path(sec.MODELS / n) for n in
 print("[15] OCR disponível:", sec.ocr_disponivel())
 _limpar_usuario_teste()
 print("[16] Limpeza do usuário de teste: OK")
-print("Tudo certo. Para testar câmera/face: RUN_DEMO.cmd")
+print("Tudo certo. Para testar câmera/face: scripts\\RUN_DEMO.cmd")
